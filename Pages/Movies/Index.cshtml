@@ -10,6 +10,16 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Movie Name / Director Name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -25,12 +35,20 @@
             <th>
                 @Html.DisplayNameFor(model => model.Movie[0].ReleaseDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].MovieGenres)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Movie) {
-        <tr>
+@foreach (var item in Model.MovieD.Movies) {
+ string selectedRow = "";
+ if (item.ID == Model.MovieID)
+ {
+ selectedRow = "table-success";
+ }
+ <tr class="@selectedRow">
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -43,6 +61,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
+                <td>
+                    @{
+                        foreach (var category in item.MovieGenres)
+                        {
+                            @category.Genre.ID @: @category.Genre.GenreName <br />
+                        }
+                    }
+                </td>
 
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |

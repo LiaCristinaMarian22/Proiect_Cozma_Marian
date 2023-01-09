@@ -1,12 +1,32 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Proiect_Cozma_Marian.Data;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+   policy.RequireRole("Admin"));
+});
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Movies");
+    options.Conventions.AllowAnonymousToPage("/Movies/Index");
+    options.Conventions.AllowAnonymousToPage("/Movies/Details");
+    options.Conventions.AuthorizeFolder("/Users", "AdminPolicy");
+
+});
 builder.Services.AddDbContext<Proiect_Cozma_MarianContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Proiect_Cozma_MarianContext") ?? throw new InvalidOperationException("Connection string 'Proiect_Cozma_MarianContext' not found.")));
+
+builder.Services.AddDbContext<CinemaIdentityContext>(options =>
+
+options.UseSqlServer(builder.Configuration.GetConnectionString("Proiect_Cozma_MarianContext") ?? throw new InvalidOperationException("Connection string 'Proiect_Cozma_MarianContext' not found.")));
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+options.SignIn.RequireConfirmedAccount = true)
+ .AddRoles<IdentityRole>()
+ .AddEntityFrameworkStores<CinemaIdentityContext>();
 
 var app = builder.Build();
 
@@ -22,6 +42,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 

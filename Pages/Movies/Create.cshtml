@@ -33,6 +33,32 @@
                 <input asp-for="Movie.ReleaseDate" class="form-control" />
                 <span asp-validation-for="Movie.ReleaseDate" class="textdanger"></span>
             </div>
+            <div class="form-group">
+                <div class="table">
+                    <table>
+                        <tr>
+                            @{
+                                int cnt = 0;
+
+                                foreach (var gen in Model.AssignedGenreDataList)
+                                {
+                                    if (cnt++ % 3 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedGenres"
+                                               value="@gen.GenreID"
+                                               @(Html.Raw(gen.Assigned ? "checked=\"checked\"" : "")) />
+                                        @gen.GenreID @: @gen.Name
+                                    @:</td>
+                                }
+                            @:</tr>
+                            }
+                        </table>
+                </div>
+ </div>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

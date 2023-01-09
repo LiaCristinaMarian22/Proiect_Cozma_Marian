@@ -9,6 +9,7 @@ namespace Proiect_Cozma_Marian.Data
 {
     public class Proiect_Cozma_MarianContext : DbContext
     {
+        
         public Proiect_Cozma_MarianContext (DbContextOptions<Proiect_Cozma_MarianContext> options)
             : base(options)
         {
@@ -17,5 +18,13 @@ namespace Proiect_Cozma_Marian.Data
         public DbSet<Proiect_Cozma_Marian.Models.Movie> Movie { get; set; } = default!;
 
         public DbSet<Proiect_Cozma_Marian.Models.Genre> Genre { get; set; }
+
+        public DbSet<Proiect_Cozma_Marian.Models.User> User { get; set; }
+
+        public DbSet<Proiect_Cozma_Marian.Models.Booking> Booking { get; set; }
+
+        public DbSet<Proiect_Cozma_Marian.Models.Schedule> Schedule { get; set; }
+
+        public DbSet<Proiect_Cozma_Marian.Models.Offer> Offer { get; set; }
     }
 }

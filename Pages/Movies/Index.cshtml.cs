@@ -20,12 +20,39 @@ namespace Proiect_Cozma_Marian.Pages.Movies
         }
 
         public IList<Movie> Movie { get;set; } = default!;
+        public MovieData MovieD { get; set; }
+        public int MovieID { get; set; }
+        public int GenreID { get; set; }
+        public string CurrentFilter { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? id, int? genreID, string searchString)
         {
-            if (_context.Movie != null)
+            MovieD = new MovieData();
+
+            CurrentFilter = searchString;
+
+            MovieD.Movies = await _context.Movie
+            .Include(m => m.MovieGenres)
+            .ThenInclude(m => m.Genre)
+            .AsNoTracking()
+            .OrderBy(m => m.Name)
+            .ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                Movie = await _context.Movie.ToListAsync();
+                MovieD.Movies = MovieD.Movies.Where(s => s.Director.Contains(searchString)
+
+               || s.Director.Contains(searchString)
+               || s.Name.Contains(searchString));
+               
+            } 
+
+                if (id != null)
+            {
+                MovieID = id.Value;
+                Movie movie = MovieD.Movies
+                .Where(i => i.ID == id.Value).Single();
+                MovieD.Genres = movie.MovieGenres.Select(s => s.Genre);
             }
         }
     }

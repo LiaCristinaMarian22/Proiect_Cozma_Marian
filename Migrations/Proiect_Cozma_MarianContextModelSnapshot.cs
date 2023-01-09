@@ -22,6 +22,35 @@ namespace Proiect_Cozma_Marian.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Proiect_Cozma_Marian.Models.Booking", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int?>("MovieID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ReturnTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MovieID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Booking");
+                });
+
             modelBuilder.Entity("Proiect_Cozma_Marian.Models.Genre", b =>
                 {
                     b.Property<int>("ID")
@@ -90,6 +119,47 @@ namespace Proiect_Cozma_Marian.Migrations
                     b.ToTable("MovieGenre");
                 });
 
+            modelBuilder.Entity("Proiect_Cozma_Marian.Models.User", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("Proiect_Cozma_Marian.Models.Booking", b =>
+                {
+                    b.HasOne("Proiect_Cozma_Marian.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieID");
+
+                    b.HasOne("Proiect_Cozma_Marian.Models.User", "User")
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Proiect_Cozma_Marian.Models.MovieGenre", b =>
                 {
                     b.HasOne("Proiect_Cozma_Marian.Models.Genre", "Genre")
@@ -117,6 +187,11 @@ namespace Proiect_Cozma_Marian.Migrations
             modelBuilder.Entity("Proiect_Cozma_Marian.Models.Movie", b =>
                 {
                     b.Navigation("MovieGenres");
+                });
+
+            modelBuilder.Entity("Proiect_Cozma_Marian.Models.User", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }
